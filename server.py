@@ -12,16 +12,11 @@ def render_index_page():
 
 @app.route('/emotionDetector')
 def emo_detector():
-
-    text_to_analyze = request.args.get('textToAnalyze')
-
-    if not text_to_analyze:
-        return "Invalid text! Please enter a statement."
-
+    text_to_analyze = request.args.get('textToAnalyze', '')
     response = emotion_detector(text_to_analyze)
 
-    if response is None:
-        return "Invalid text! Please try again."
+    if response['dominant_emotion'] is None:
+        return "Invalid text! Please try again!"
 
     anger = response['anger']
     disgust = response['disgust']
@@ -29,17 +24,11 @@ def emo_detector():
     joy = response['joy']
     sadness = response['sadness']
     dominant_emotion = response['dominant_emotion']
-
-    if dominant_emotion is None:
-        return "Invalid text! Please try again."
-
+    
     return (
         f"For the given statement, the system response is "
-        f"'anger': {anger}, "
-        f"'disgust': {disgust}, "
-        f"'fear': {fear}, "
-        f"'joy': {joy} and "
-        f"'sadness': {sadness}. "
+        f"'anger': {anger}, 'disgust': {disgust}, 'fear': {fear}, "
+        f"'joy': {joy} and 'sadness': {sadness}. "
         f"The dominant emotion is {dominant_emotion}."
     )
 
